@@ -4,5 +4,4 @@
 🔥 The repository will be completed soon!!
 
 Video demo:
-<video src="https://github.com/chenyu-xjtu/video/blob/master/canyon.mp4?raw=true" controls="controls"  autoplay="autoplay">
-</video>
+![image](https://github.com/chenyu-xjtu/DualFluidNet/blob/main/canyon.gif)
