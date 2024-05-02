@@ -1,3 +1,0 @@
-dataset_dir: "../DeepLagrangianFluids-master/datasets/WBC-SPH" # path to the dataset directory with 'train' and 'valid' subdirs.
-train_data:
-  random_rotation: true # randomly rotate training data about the gravity axis.
