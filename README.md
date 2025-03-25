@@ -2,7 +2,7 @@
 Our paper has been accepted by *AAAI* 2025 🔥🔥🔥
 
 # DualFluidNet: An attention-based dual-pipeline network for fluid simulation
-Our paper has been accepted by *Neural Networks* 2024 🚀🚀🚀
+One more related paper has been accepted by *Neural Networks* 2024 🚀🚀🚀
 
 
 ![Fluid Simulation in Canyon](https://github.com/chenyu-xjtu/A-Pioneering-Neural-Network-Method-for-Efficient-and-Robust-Fuel-Sloshing-Simulation-in-Aircraft/blob/main/canyon.gif)
