@@ -1,3 +1,4 @@
+![Autoplay Demo GIF](./canyon.gif)
 # A Pioneering Neural Network Method for Efficient and Robust Fuel Sloshing Simulation in Aircraft
 Our paper has been accepted by *AAAI* 2025 🔥🔥🔥
 
