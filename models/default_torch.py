@@ -5,7 +5,8 @@ import numpy as np
 import torch.nn as nn
 import copy
 import math
-from models.convolutions import ContinuousConv
+from models.ASCC import ContinuousConv as ASCC
+import time
 
 class LayerNorm(nn.Module):
     def __init__(self, features, eps=1e-6):
@@ -24,13 +25,13 @@ class AFF(nn.Module):
         super(AFF, self).__init__()
         self.filter_extent = torch.tensor(np.float32(1.5 * 6 * 0.025))
         def window_poly6(r_sqr):
-            return torch.clamp((1 - r_sqr) ** 3, 0, 1)  # torch.clamp()将输入input张量每个元素的范围限制到区间 [min,max]，返回结果到一个新张量。
+            return torch.clamp((1 - r_sqr) ** 3, 0, 1)
 
         def Conv(name, activation=None, conv_type='cconv', **kwargs):
             if conv_type == 'cconv':
                 conv_fn = ml3d.layers.ContinuousConv
             elif conv_type == 'ascc':
-                conv_fn = ContinuousConv
+                conv_fn = ASCC
             conv = conv_fn(kernel_size=[4, 4, 4],
                            activation=activation,
                            align_corners=True,
@@ -40,7 +41,6 @@ class AFF(nn.Module):
                            **kwargs)
             return conv
 
-        #一次aff
         self.cconv1 = Conv(name="conv1",
              in_channels=channels*2,
              filters=inter_channels,
@@ -58,10 +58,7 @@ class AFF(nn.Module):
 
     def forward(self, x, y, pos):
         xa = torch.cat((x, y), -1)
-        # xa = torch.unsqueeze(xa, dim=0).transpose(1, 2)
-        # xa = torch.unsqueeze(xa, dim=0)
 
-        #第一次aff
         xl = self.cconv1(xa, pos, pos, self.filter_extent)
         xl = self.batchNorm1(xl)
         xl = self.relu1(xl)
@@ -76,13 +73,13 @@ class IAFF(nn.Module):
         super(IAFF, self).__init__()
         self.filter_extent = torch.tensor(np.float32(1.5 * 6 * 0.025))
         def window_poly6(r_sqr):
-            return torch.clamp((1 - r_sqr) ** 3, 0, 1)  # torch.clamp()将输入input张量每个元素的范围限制到区间 [min,max]，返回结果到一个新张量。
+            return torch.clamp((1 - r_sqr) ** 3, 0, 1)
 
         def Conv(name, activation=None, conv_type='cconv', **kwargs):
             if conv_type == 'cconv':
                 conv_fn = ml3d.layers.ContinuousConv
             elif conv_type == 'ascc':
-                conv_fn = ContinuousConv
+                conv_fn = ASCC
             conv = conv_fn(kernel_size=[4, 4, 4],
                            activation=activation,
                            align_corners=True,
@@ -92,7 +89,6 @@ class IAFF(nn.Module):
                            **kwargs)
             return conv
 
-        #第一次aff
         self.cconv1 = Conv(name="conv1",
              in_channels=channels*2,
              filters=inter_channels,
@@ -107,7 +103,6 @@ class IAFF(nn.Module):
                            conv_type=conv_type)
         self.batchNorm2 = nn.BatchNorm1d(channels)
 
-        #第二次aff
         self.cconv3 = Conv(name="conv3",
              in_channels=channels,
              filters=inter_channels,
@@ -125,10 +120,7 @@ class IAFF(nn.Module):
 
     def forward(self, x, y, pos):
         xa = torch.cat((x, y), -1)
-        # xa = torch.unsqueeze(xa, dim=0).transpose(1, 2)
-        # xa = torch.unsqueeze(xa, dim=0)
 
-        #第一次aff
         xl = self.cconv1(xa, pos, pos, self.filter_extent)
         xl = self.batchNorm1(xl)
         xl = self.relu1(xl)
@@ -136,15 +128,13 @@ class IAFF(nn.Module):
         xl = self.batchNorm2(xl)
         wei1 = self.sigmoid(xl)
         xo = 2 * x * wei1 + 2 * y * (1 - wei1)
-        #第二次aff
+
         xo = self.cconv3(xo, pos, pos, self.filter_extent)
         xo = self.batchNorm3(xo)
         xo = self.relu2(xo)
         xo = self.cconv4(xo, pos, pos, self.filter_extent)
         xo = self.batchNorm4(xo)
         wei2 = self.sigmoid(xo)
-        # wei = torch.squeeze(wei, dim=0)
-        # wei = torch.squeeze(wei, dim=0).transpose(0, 1)
         xo = 2 * x * wei2 + 2 * y * (1 - wei2)
         return xo
 
@@ -175,17 +165,16 @@ class MyParticleNetwork(torch.nn.Module):
         self.timestep = timestep
         gravity = torch.FloatTensor(gravity)
         self.register_buffer('gravity', gravity)
-        # self.transformer = Transformer(emb_dims=32, n_blocks=1, dropout=0.0 ,ff_dims=64, n_heads=1, final_dims=64)
 
 
         def window_poly6(r_sqr):
-            return torch.clamp((1 - r_sqr)**3, 0, 1) #torch.clamp()将输入input张量每个元素的范围限制到区间 [min,max]，返回结果到一个新张量。
+            return torch.clamp((1 - r_sqr)**3, 0, 1)
 
         def Conv(name, activation=None, conv_type='cconv', **kwargs):
             if conv_type == 'cconv':
                 conv_fn = ml3d.layers.ContinuousConv
             elif conv_type == 'ascc':
-                conv_fn = ContinuousConv
+                conv_fn = ASCC
             window_fn = None
             if self.use_window == True:
                 window_fn = window_poly6
@@ -208,7 +197,6 @@ class MyParticleNetwork(torch.nn.Module):
     #cconv
         self.aff_cconv = IAFF(channels=32, inter_channels=64, conv_type='cconv')
         self._all_convs_cconv = []
-        #定义第一层的三个卷积
         self.conv0_fluid_cconv = Conv(name="cconv0_fluid",
                                 in_channels=4 + other_feats_channels,
                                 filters=self.layer_channels[0],
@@ -228,11 +216,9 @@ class MyParticleNetwork(torch.nn.Module):
         self.convs_cconv = []
         self.denses_cconv = []
         for i in range(1, len(self.layer_channels)):
-            #从第二层开始定义每层的卷积conv或全连接层dense，存到convs[]和denses[]中
             in_ch = self.layer_channels[i - 1]
             if i == 1:
-                # in_ch *= 3 #第二层的输入维度为3个32
-                in_ch = 64 #第二层的输入维度为128
+                in_ch = 64
             out_ch = self.layer_channels[i]
             dense_cconv = torch.nn.Linear(in_features=in_ch, out_features=out_ch)
             torch.nn.init.xavier_uniform_(dense_cconv.weight)
@@ -250,7 +236,6 @@ class MyParticleNetwork(torch.nn.Module):
     #ASCC
         self.aff_ascc = IAFF(channels=32, inter_channels=64, conv_type='ascc')
         self._all_convs_ascc = []
-        # 定义第一层的三个卷积
         self.conv0_fluid_ascc = Conv(name="ascc0_fluid",
                                 in_channels=4 + other_feats_channels,
                                 filters=self.layer_channels[0],
@@ -270,11 +255,9 @@ class MyParticleNetwork(torch.nn.Module):
         self.convs_ascc = []
         self.denses_ascc = []
         for i in range(1, len(self.layer_channels)):
-            # 从第二层开始定义每层的卷积conv或全连接层dense，存到convs[]和denses[]中
             in_ch = self.layer_channels[i - 1]
             if i == 1:
-                # in_ch *= 3 #第二层的输入维度为3个32
-                in_ch = 64  # 第二层的输入维度为128
+                in_ch = 64
             out_ch = self.layer_channels[i]
             dense_ascc = torch.nn.Linear(in_features=in_ch, out_features=out_ch)
             torch.nn.init.xavier_uniform_(dense_ascc.weight)
@@ -325,49 +308,48 @@ class MyParticleNetwork(torch.nn.Module):
         """Expects that the pos and vel has already been updated with gravity and velocity"""
 
         # compute the extent of the filters (the diameter)
-        filter_extent = torch.tensor(self.filter_extent) # self.filter_extent = np.float32(self.radius_scale * 6 * self.particle_radius) = 1.5 * 6 * 0.025
-        fluid_feats = [torch.ones_like(pos[:, 0:1]), vel] # ones_like函数：根据给定张量，生成与其形状相同的全1张量
-        # fluid_feats [(4404,1), (4404,3)] 其中(4404,1)为全1, (4404,3)为速度
+        filter_extent = torch.tensor(self.filter_extent)
+        fluid_feats = [torch.ones_like(pos[:, 0:1]), vel]
         if not other_feats is None:
             fluid_feats.append(other_feats)
-        fluid_feats = torch.cat(fluid_feats, axis=-1) #特征向量[1,v] (4404,4) #没有粘度viscosity
+        fluid_feats = torch.cat(fluid_feats, axis=-1)
+
     #cconv
         # 经过第一层网络
         self.ans_conv0_fluid_cconv = self.conv0_fluid_cconv(fluid_feats, pos, pos,
-                                                filter_extent) # (4404,32)
-        self.ans_dense0_fluid_cconv = self.dense0_fluid_cconv(fluid_feats) #（4404,32）
+                                                filter_extent)
+        self.ans_dense0_fluid_cconv = self.dense0_fluid_cconv(fluid_feats)
         self.ans_conv0_obstacle_cconv = self.conv0_obstacle_cconv(box_feats, box, pos,
-                                                      filter_extent) #（4404,32）
+                                                      filter_extent)
         self.ans_dense0_fluid_cconv = self.dense0_fluid_cconv(fluid_feats)
 
         #IAFF
-        self.hybrid_aff_cconv = self.aff_cconv(self.ans_conv0_fluid_cconv, self.ans_conv0_obstacle_cconv, pos) #(4404, 32)
+        self.hybrid_aff_cconv = self.aff_cconv(self.ans_conv0_fluid_cconv, self.ans_conv0_obstacle_cconv, pos)
 
         feats_cconv = torch.cat([
             self.hybrid_aff_cconv, self.ans_dense0_fluid_cconv
-        ], axis=-1)  # （4404,64）
+        ], axis=-1)
+
     # ascc
-        # 经过第一层网络
         self.ans_conv0_fluid_ascc = self.conv0_fluid_ascc(fluid_feats, pos, pos,
-                                                          filter_extent)  # (4404,32)
-        self.ans_dense0_fluid_ascc = self.dense0_fluid_ascc(fluid_feats)  # （4404,32）
+                                                          filter_extent)
+        self.ans_dense0_fluid_ascc = self.dense0_fluid_ascc(fluid_feats)
         self.ans_conv0_obstacle_ascc = self.conv0_obstacle_ascc(box_feats, box, pos,
-                                                                filter_extent)  # （4404,32）
+                                                                filter_extent)
         self.ans_dense0_fluid_ascc = self.dense0_fluid_ascc(fluid_feats)
 
         # IAFF
-        self.hybrid_aff_ascc = self.aff_ascc(self.ans_conv0_fluid_ascc, self.ans_conv0_obstacle_ascc, pos)  # (4404, 32)
+        self.hybrid_aff_ascc = self.aff_ascc(self.ans_conv0_fluid_ascc, self.ans_conv0_obstacle_ascc, pos)
 
         feats_ascc = torch.cat([
             self.hybrid_aff_ascc, self.ans_dense0_fluid_ascc
-        ], axis=-1)  # （4404,64）
+        ], axis=-1)
 
         feats_select = self.aff0(feats_cconv, feats_ascc, pos)
 
         self.ans_convs = [feats_select]
 
         for conv_cconv, dense_cconv, conv_ascc, dense_ascc, aff in zip(self.convs_cconv, self.denses_cconv, self.convs_ascc, self.denses_ascc, self.affs):
-            #经过后三层网络，每层的结果存在ans_convs[]中
             inp_feats = F.relu(self.ans_convs[-1])
             #cconv
             ans_conv_cconv = conv_cconv(inp_feats, pos, pos, filter_extent)
@@ -382,7 +364,6 @@ class MyParticleNetwork(torch.nn.Module):
             #ResAFF
             if len(self.ans_convs) == 3 and ans_dense_cconv.shape[-1] == self.ans_convs[-2].shape[-1]:
                 ans_select = self.resAff(ans_select, self.ans_convs[-2], pos)
-                # print("ResAff")
             self.ans_convs.append(ans_select)
 
         # compute the number of fluid neighbors.
@@ -405,26 +386,11 @@ class MyParticleNetwork(torch.nn.Module):
           box are the positions of the static particles and box_feats are the
           normals of the static particles.
         """
-        # 因为训练过程中是将每个batch中的各个场景数据分开传入model，所以这里得到的inputs是一组场景数据，如（6,4403,3），其中6是6种属性（作键），4403是该组场景数据中的点数（各场景点数不相同），3是特征维度（xyz）
-        pos, vel, feats, box, box_feats = inputs # box是边界，box_feats是边界粒子的法向量, feats在这里还是None
-        # pos,vel属性都是（4403,3）, box，box_feats是（38706,3）
-        pos2, vel2 = self.integrate_pos_vel(pos, vel) # 施加重力后的速度和位置
+        pos, vel, feats, box, box_feats = inputs
+        pos2, vel2 = self.integrate_pos_vel(pos, vel)
         pos_correction = self.compute_correction(
-            pos2, vel2, feats, box, box_feats, fixed_radius_search_hash_table) # 经过网络得到deltax
+            pos2, vel2, feats, box, box_feats, fixed_radius_search_hash_table)
         pos2_corrected, vel2_corrected = self.compute_new_pos_vel(
-            pos, vel, pos2, vel2, pos_correction)  # 原来的x和v加上deltax更新最后的x和v
+            pos, vel, pos2, vel2, pos_correction)
 
         return pos2_corrected, vel2_corrected
-
-    # def init(self, feats_shape=None):
-    # """Runs the network with dummy data to initialize the shape of all variables"""
-    # pos = np.zeros(shape=(1, 3), dtype=np.float32)
-    # vel = np.zeros(shape=(1, 3), dtype=np.float32)
-    # if feats_shape is None:
-    # feats = None
-    # else:
-    # feats = np.zeros(shape=feats_shape, dtype=np.float32)
-    # box = np.zeros(shape=(1, 3), dtype=np.float32)
-    # box_feats = np.zeros(shape=(1, 3), dtype=np.float32)
-
-    # _ = self.__call__((pos, vel, feats, box, box_feats))
