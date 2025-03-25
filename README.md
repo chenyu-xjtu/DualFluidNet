@@ -1,6 +1,10 @@
-# DualFluidNet: An attention-based dual-pipeline network for fluid simulation
+# A Pioneering Neural Network Method for Efficient and Robust Fuel Sloshing Simulation in Aircraft
+Our paper has been accepted by *AAAI* 2025
 
-This repository contains code for our *Neural Networks* 2024 paper. 
+# DualFluidNet: An attention-based dual-pipeline network for fluid simulation
+Our paper has been accepted by *Neural Networks* 2024
+
+This repository contains code for our network for fluid simulation.
 We show how to train particle-based fluid simulation networks as CNNs using 
 continuous convolutions. The code allows you to generate data, train your own 
 model or just run a pretrained model.
