@@ -1,4 +1,4 @@
-![Autoplay Demo GIF](./canyon.gif)
+<video src="./canyon.mp4" muted autoplay loop playsinline width="600"></video>
 # A Pioneering Neural Network Method for Efficient and Robust Fuel Sloshing Simulation in Aircraft
 Our paper has been accepted by *AAAI* 2025 🔥🔥🔥
 
