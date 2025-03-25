@@ -1,0 +1,30 @@
+{
+    "walls":[
+        {
+            "path":"datasets/models/Box_open.obj",
+            "translation":[
+                0,
+                0,
+                0
+            ]
+        }
+    ],
+    "fluids":[
+        {
+            "path":"datasets/models/Fluid_001.obj",
+            "velocity":[
+                0.3,
+                0,
+                0.2
+            ],
+            "translation":[
+                0,
+                0,
+                0
+            ],
+            "start":0,
+            "stop":1,
+            "step":1
+        }
+    ]
+}
