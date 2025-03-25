@@ -1,9 +1,11 @@
-<video src="./canyon.mp4" muted autoplay loop playsinline width="600"></video>
 # A Pioneering Neural Network Method for Efficient and Robust Fuel Sloshing Simulation in Aircraft
 Our paper has been accepted by *AAAI* 2025 🔥🔥🔥
 
 # DualFluidNet: An attention-based dual-pipeline network for fluid simulation
 Our paper has been accepted by *Neural Networks* 2024 🚀🚀🚀
+
+
+![Fluid Simulation in Canyon](https://github.com/chenyu-xjtu/A-Pioneering-Neural-Network-Method-for-Efficient-and-Robust-Fuel-Sloshing-Simulation-in-Aircraft/blob/main/canyon.gif)
 
 This repository contains code for our network for fluid simulation.
 We show how to train particle-based fluid simulation networks as CNNs using 
