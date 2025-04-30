@@ -1,10 +1,6 @@
 # A Pioneering Neural Network Method for Efficient and Robust Fuel Sloshing Simulation in Aircraft
 Our paper has been accepted by *AAAI* 2025 🔥🔥🔥
 
-# DualFluidNet: An attention-based dual-pipeline network for fluid simulation
-One more related paper has been accepted by *Neural Networks* 2024 🚀🚀🚀
-
-
 ![Fluid Simulation in Canyon](https://github.com/chenyu-xjtu/A-Pioneering-Neural-Network-Method-for-Efficient-and-Robust-Fuel-Sloshing-Simulation-in-Aircraft/blob/main/canyon.gif)
 
 This repository contains code for our network for fluid simulation.
@@ -53,7 +49,7 @@ We recommend to use the latest versions for all other packages.
 ### 1. Water block dataset download
 If you want to skip the data generation step you can download training and validation data from the links below.
 
-| water default data  | 34GB | [link](https://drive.google.com/file/d/1b3OjeXnsvwUAeUq2Z0lcrX7j9U7zLO07) |
+| water default data  | 34GB | [link](https://ojs.aaai.org/index.php/AAAI/article/view/33752) |
 
 For the default data the training set has been generated with the scripts in this
 repository and the validation data corresponds to the data used in the paper.
