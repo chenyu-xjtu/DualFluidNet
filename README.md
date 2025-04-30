@@ -10,18 +10,14 @@ model or just run a pretrained model.
 
 Please cite our paper [(pdf)](https://www.sciencedirect.com/science/article/abs/pii/S0893608024003253) if you find this code useful:
 ```
-@article{CHEN2024106401,
-title = {DualFluidNet: An attention-based dual-pipeline network for fluid simulation},
-journal = {Neural Networks},
-volume = {177},
-pages = {106401},
-year = {2024},
-issn = {0893-6080},
-doi = {https://doi.org/10.1016/j.neunet.2024.106401},
-url = {https://www.sciencedirect.com/science/article/pii/S0893608024003253},
-author = {Yu Chen and Shuai Zheng and Menglong Jin and Yan Chang and Nianyi Wang},
-keywords = {Fluid simulation, Learning physics, Neural network, Deep learning},
-abstract = {Fluid motion can be considered as a point cloud transformation when using the SPH method. Compared to traditional numerical analysis methods, using machine learning techniques to learn physics simulations can achieve near-accurate results, while significantly increasing efficiency. In this paper, we propose an innovative approach for 3D fluid simulations utilizing an Attention-based Dual-pipeline Network, which employs a dual-pipeline architecture, seamlessly integrated with an Attention-based Feature Fusion Module. Unlike previous methods, which often make difficult trade-offs between global fluid control and physical law constraints, we find a way to achieve a better balance between these two crucial aspects with a well-designed dual-pipeline approach. Additionally, we design a Type-aware Input Module to adaptively recognize particles of different types and perform feature fusion afterward, such that fluid-solid coupling issues can be better dealt with. Furthermore, we propose a new dataset, Tank3D, to further explore the network’s ability to handle more complicated scenes. The experiments demonstrate that our approach not only attains a quantitative enhancement in various metrics, surpassing the state-of-the-art methods, but also signifies a qualitative leap in neural network-based simulation by faithfully adhering to the physical laws. Code and video demonstrations are available at https://github.com/chenyu-xjtu/DualFluidNet.}
+@inproceedings{chen2025pioneering,
+  title={A Pioneering Neural Network Method for Efficient and Robust Fuel Sloshing Simulation in Aircraft},
+  author={Chen, Yu and Zheng, Shuai and Wang, Nianyi and Jin, Menglong and Chang, Yan},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={39},
+  number={15},
+  pages={15957--15965},
+  year={2025}
 }
 ```
 
