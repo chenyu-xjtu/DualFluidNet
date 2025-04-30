@@ -12,7 +12,7 @@ Our paper has been accepted by *AAAI* 2025 🔥🔥🔥
 }
 ```
 
-Another related paper has been accepted by *Neural Networks* 2024 🔥🔥🔥
+Another related paper has been accepted by *Neural Networks* 🔥🔥🔥
 ```
 @article{chen2024dualfluidnet,
   title={DualFluidNet: An attention-based dual-pipeline network for fluid simulation},
