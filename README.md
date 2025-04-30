@@ -1,14 +1,5 @@
 # A Pioneering Neural Network Method for Efficient and Robust Fuel Sloshing Simulation in Aircraft
 Our paper has been accepted by *AAAI* 2025 🔥🔥🔥
-
-![Fluid Simulation in Canyon](https://github.com/chenyu-xjtu/A-Pioneering-Neural-Network-Method-for-Efficient-and-Robust-Fuel-Sloshing-Simulation-in-Aircraft/blob/main/canyon.gif)
-
-This repository contains code for our network for fluid simulation.
-We show how to train particle-based fluid simulation networks as CNNs using 
-continuous convolutions. The code allows you to generate data, train your own 
-model or just run a pretrained model.
-
-Please cite our paper [(pdf)](https://www.sciencedirect.com/science/article/abs/pii/S0893608024003253) if you find this code useful:
 ```
 @inproceedings{chen2025pioneering,
   title={A Pioneering Neural Network Method for Efficient and Robust Fuel Sloshing Simulation in Aircraft},
@@ -20,6 +11,30 @@ Please cite our paper [(pdf)](https://www.sciencedirect.com/science/article/abs/
   year={2025}
 }
 ```
+
+Another related paper has been accepted by *Neural Networks* 2024 🔥🔥🔥
+```
+@article{chen2024dualfluidnet,
+  title={DualFluidNet: An attention-based dual-pipeline network for fluid simulation},
+  author={Chen, Yu and Zheng, Shuai and Jin, Menglong and Chang, Yan and Wang, Nianyi},
+  journal={Neural Networks},
+  volume={177},
+  pages={106401},
+  year={2024},
+  publisher={Elsevier}
+}
+```
+
+![Fluid Simulation in Canyon](https://github.com/chenyu-xjtu/A-Pioneering-Neural-Network-Method-for-Efficient-and-Robust-Fuel-Sloshing-Simulation-in-Aircraft/blob/main/canyon.gif)
+
+This repository contains code for our network for fluid simulation.
+We show how to train particle-based fluid simulation networks as CNNs using 
+continuous convolutions. The code allows you to generate data, train your own 
+model or just run a pretrained model.
+
+Please cite our paper [(pdf)](https://www.sciencedirect.com/science/article/abs/pii/S0893608024003253) if you find this code useful:
+
+
 
 ## Dependencies
 
